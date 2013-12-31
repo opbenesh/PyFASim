@@ -1,3 +1,5 @@
+"""A simple simulator and unit-tester for finite state machines"""
+
 import re
 from random import randrange,choice
 from abc import ABCMeta, abstractmethod
