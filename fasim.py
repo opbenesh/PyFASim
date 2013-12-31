@@ -54,28 +54,28 @@ class abstractFSM:
 		return s
 		
 	def test(self,predicate,tests=1000,maxstringlength=20):
-		print 'Testing "%s"...'%self.name
+		print('Testing "%s"...'%self.name)
 		for i in range(tests):
 			s=self.rand_string(maxstringlength)
 			simresult,predresult=self.simulate(s),predicate(s)
 			if simresult!=predresult:
-				print 'Test failed.'
-				print 'Input string "%s"'%s
-				print 'DFA:\t\t%s.'%bool_to_accepts(simresult)
-				print 'Predicate:\t%s.'%bool_to_accepts(predresult)
+				print('Test failed.')
+				print('Input string "%s"'%s)
+				print('DFA:\t\t%s.'%bool_to_accepts(simresult))
+				print('Predicate:\t%s.'%bool_to_accepts(predresult))
 				return
-		print 'Success! The state machine and the predicate agreed on %d tests.'%tests
+		print('Success! The state machine and the predicate agreed on %d tests.'%tests)
 		
 class dfa(abstractFSM):
 	def move(self,state,letter):
 		nexts=[n for i,l,n in self.transitions if i==state and l in (letter,'*')]
 		if len(nexts)==0:
 			raise DFATrapException('No transition defined for (%s,%s)'%(state,letter))
-		if self.debug:print '%s,%s->%s'%(state,letter,nexts[0])
+		if self.debug:print('%s,%s->%s'%(state,letter,nexts[0]))
 		return nexts[0]
 		
 	def simulate(self,s):
-		if self.debug: print 'Simulating %s on input %s:'%(self.name,s)
+		if self.debug: print('Simulating %s on input %s:'%(self.name,s))
 		state=self.start
 		result=None
 		try:
@@ -84,7 +84,7 @@ class dfa(abstractFSM):
 			result=state in self.accept
 		except DFATrapException:
 			result=False
-		if self.debug: print bool_to_accepts(result)
+		if self.debug: print(bool_to_accepts(result))
 		return result
 		
 class nfa(abstractFSM):
@@ -92,10 +92,10 @@ class nfa(abstractFSM):
 		nexts=set([n for i,l,n in self.transitions if i==state and l in (letter,'*')])
 		if len(nexts)==0:
 			raise DFATrapException('No transition defined for (%s,%s)'%(state,letter))
-		if self.debug:print '%s,%s->{%s}'%(state,letter,",".join(list(nexts)))
+		if self.debug:print('%s,%s->{%s}'%(state,letter,",".join(list(nexts))))
 		return nexts
 	def simulate(self,s):
-		if self.debug: print 'Simulating %s on input %s:'%(self.name,s)
+		if self.debug: print('Simulating %s on input %s:'%(self.name,s))
 		states={self.start}
 		result=None
 		for c in s:
@@ -107,5 +107,5 @@ class nfa(abstractFSM):
 					pass
 			states=nexts
 		result=len(states.intersection(self.accept))>0
-		if self.debug: print bool_to_accepts(result)
+		if self.debug: print(bool_to_accepts(result))
 		return result
